@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class RecordMapperTest {
 
@@ -32,6 +33,26 @@ public class RecordMapperTest {
     assertNotNull(result);
     assertEquals("Alice", result.name());
     assertEquals(30, result.age());
+  }
+
+  @Test
+  @DisplayName("Should match a JsonObject to a simple record")
+  public void testSimpleRecordMatching() {
+    record SimpleRecord(String name, int age) {}
+
+    var recordMapper = RecordMapper.of(MethodHandles.lookup());
+
+    JsonObject json = (JsonObject) Json.fromUntyped(Map.of(
+        "name", Json.fromUntyped("Alice"),
+        "age", Json.fromUntyped(30)
+    ));
+
+    if (recordMapper.match(json, SimpleRecord.class) instanceof SimpleRecord(String name, int age)) {
+      assertEquals("Alice", name);
+      assertEquals(30, age);
+    } else {
+      fail("Should match the record");
+    }
   }
 
   @Test

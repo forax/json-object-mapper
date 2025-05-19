@@ -1,5 +1,7 @@
 package json;
 
+import netscape.javascript.JSObject;
+
 import java.lang.invoke.MethodHandles;
 import java.util.Objects;
 import java.util.json.JsonObject;
@@ -111,4 +113,6 @@ public interface RecordMapper {
    *                                       not supported by this mapper's implementation.
    */
   <T extends Record> T fromTyped(JsonObject object, Class<T> recordClass);
+
+  Object match(JsonObject object, Class<? extends Record> recordClass);
 }

@@ -1,5 +1,7 @@
 package json;
 
+import netscape.javascript.JSObject;
+
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandleProxies;
 import java.lang.invoke.MethodHandles;
@@ -54,12 +56,23 @@ record RecordMapperImpl(MethodHandles.Lookup lookup, ClassValue<MethodHandle> mh
   }
 
 
-
+  @Override
   @SuppressWarnings("unchecked")
   public <T extends Record> T fromTyped(JsonObject object, Class<T> recordClass) {
     Objects.requireNonNull(object);
     Objects.requireNonNull(recordClass);
     return (T) decoders.get(recordClass).decode(object);
+  }
+
+  @Override
+  public Object match(JsonObject object, Class<? extends Record> recordClass) {
+    Objects.requireNonNull(object);
+    Objects.requireNonNull(recordClass);
+    try {
+      return decoders.get(recordClass).decode(object);
+    } catch (IllegalStateException | ClassCastException e) {
+      return null;
+    }
   }
 
   static RecordMapper of(MethodHandles.Lookup lookup) {
