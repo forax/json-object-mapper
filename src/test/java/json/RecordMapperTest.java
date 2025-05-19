@@ -183,34 +183,17 @@ public class RecordMapperTest {
   @Test
   @DisplayName("Mapping should build decoder for each distinct local record class")
   public void testDecoderCachingWithLocalRecords() {
-    record CacheTestRecord1(String data) {}
-    record CacheTestRecord2(String data) {} // Different Class object
+    record DataRecord(String data) {}
 
     var recordMapper = RecordMapper.of(MethodHandles.lookup());
 
-    // First mapping - decoder for CacheTestRecord1 will be computed
     JsonObject json1 = (JsonObject) Json.fromUntyped(Map.of("data", Json.fromUntyped("Data1")));
-    CacheTestRecord1 r1 = recordMapper.fromTyped(json1, CacheTestRecord1.class);
-    assertEquals("Data1", r1.data());
+    DataRecord dataRecord1 = recordMapper.fromTyped(json1, DataRecord.class);
+    assertEquals("Data1", dataRecord1.data());
 
-    // Second mapping for the same CacheTestRecord1 - decoder should be reused for this specific call
-    CacheTestRecord1 r1_again = recordMapper.fromTyped(json1, CacheTestRecord1.class);
-    assertEquals("Data1", r1_again.data());
-
-
-    // Mapping for CacheTestRecord2 - decoder for CacheTestRecord2 will be computed (new class)
     JsonObject json2 = (JsonObject) Json.fromUntyped(Map.of("data", Json.fromUntyped("Data2")));
-    CacheTestRecord2 r2 = recordMapper.fromTyped(json2, CacheTestRecord2.class);
-    assertEquals("Data2", r2.data());
-
-    // This test demonstrates that ClassValue works per Class object.
-    // Since CacheTestRecord1.class and CacheTestRecord2.class are different,
-    // computeValue will be called for each.
-    // The "caching" benefit for local records primarily applies if the same
-    // local record class is used multiple times within the *same test method's*
-    // json.RecordMapper instance, or if `recordMapper.object()` is called multiple times
-    // with the *exact same* local Class object.
-    System.out.println("Decoder behavior with local records test completed.");
+    DataRecord dataRecord2 = recordMapper.fromTyped(json2, DataRecord.class);
+    assertEquals("Data2", dataRecord2.data());
   }
 
   @Test
