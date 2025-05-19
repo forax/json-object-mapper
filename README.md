@@ -1,6 +1,6 @@
 # Java JSON RecordMapper
 
-A simple Java interface for mapping `java.util.json.JsonObject` instances to Java `Record` instances.
+A simple Java interface for mapping `java.util.json.JsonObject` instances to Java record instances.
 The mapping relies on matching keys in the `JsonObject` to the component names of the target record.
 
 ## Key Features
@@ -52,7 +52,6 @@ public class Main {
 4.  **Constructor Invocation:** Invokes the canonical constructor of the `recordClass`
     with the extracted and converted values.
 
-
 ## Supported Data Types for Record Components
 
 The mapper implementation (as inferred from Javadoc and typical usage) directly supports:
@@ -63,3 +62,11 @@ The mapper implementation (as inferred from Javadoc and typical usage) directly 
 - *(TODO add more types)*
 
 If a record component type is not supported, an `UnsupportedOperationException` may be thrown.
+
+## What's missing
+
+It's just a prototype so
+
+- recursive records of the same type are not cached correctly
+- not all primitive types are supported
+- `java.util.List` of records (or primitives) are not supported
