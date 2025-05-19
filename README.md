@@ -54,7 +54,7 @@ public class Main {
 
 ## Supported Data Types for Record Components
 
-The mapper implementation (as inferred from Javadoc and typical usage) directly supports:
+The mapper implementation directly supports:
 
 - `String` from JSON string
 - `int` or `long ` from JSON number
